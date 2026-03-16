@@ -140,7 +140,7 @@ const AndyPortfolio = () => {
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop";
+                      (e.target as HTMLImageElement).src = "https://avatars.githubusercontent.com/u/254294626?s=400&u=3d701a388890151215340d7f5e4af74076d6fa34&v=4";
                     }}
                   />
                 </div>
