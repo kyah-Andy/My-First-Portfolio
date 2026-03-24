@@ -140,7 +140,7 @@ const AndyPortfolio = () => {
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://avatars.githubusercontent.com/u/254294626?s=400&u=3d701a388890151215340d7f5e4af74076d6fa34&v=4";
+                      (e.target as HTMLImageElement).src = "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/profile%20pic.jpg";
                     }}
                   />
                 </div>
