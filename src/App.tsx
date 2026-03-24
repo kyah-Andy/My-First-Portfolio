@@ -45,35 +45,35 @@ const AndyPortfolio = () => {
       issuer: "FreeCodeCamp", 
       date: "March 16, 2026", 
       icon: <Code2 className="w-6 h-6 text-blue-600" />,
-      image: "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/Python%20Certification%20(Freecodecamp).png?raw=true"
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Python%20Certification%20(Freecodecamp).png?raw=true"
     },
     { 
       name: "PL-300: Power BI Data Analyst Associate", 
       issuer: "Microsoft", 
       date: "June 26, 2023", 
       icon: <BarChart3 className="w-6 h-6 text-yellow-600" />,
-      image: "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/PowerBi%20Data%20Analyst%20Associates.png?raw=true"
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/PowerBi%20Data%20Analyst%20Associates.png?raw=true"
     },
     { 
       name: "AI-102: Azure AI Engineer Associate", 
       issuer: "Microsoft", 
       date: "December 27, 2024", 
       icon: <Cloud className="w-6 h-6 text-blue-500" />,
-      image: "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/Azure%20AI%20Engineer%20Associates.png?raw=true"
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Azure%20AI%20Engineer%20Associates.png?raw=true"
     },
     { 
       name: "AZ-900: Microsoft Azure Fundamentals", 
       issuer: "Microsoft", 
       date: "April 17, 2023", 
       icon: <Cloud className="w-6 h-6 text-blue-400" />,
-      image: "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/Azure%20Fundamentals.png?raw=true"
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Azure%20Fundamentals.png?raw=true"
     },
     { 
       name: "AI-900: Azure AI Fundamentals", 
       issuer: "Microsoft", 
       date: "April 4, 2024", 
       icon: <Cloud className="w-6 h-6 text-indigo-500" />,
-      image: "https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/Azure%20AI%20Fundamentals.png?raw=true"
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Azure%20AI%20Fundamentals.png?raw=true"
     }
   ];
 
@@ -180,7 +180,7 @@ const AndyPortfolio = () => {
               >
                 <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
                   <img 
-                    src="https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/profile%20pic.jpg?raw=true" 
+                    src="https://github.com/kyah-Andy/Images_Profile/blob/main/profile%20pic.jpg?raw=true" 
                     alt="Andy Razon" 
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
@@ -567,7 +567,7 @@ const AndyPortfolio = () => {
 
                     <div className="my-8 rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
                       <img 
-                        src="https://github.com/kyah-Andy/My-First-Portfolio/blob/main/images/IECEP%20Pic.jpg?raw=true" 
+                        src="https://github.com/kyah-Andy/Images_Profile/blob/main/IECEP%20Pic.jpg?raw=true" 
                         alt="PalaIECEPAN 2018 3rd Placer" 
                         className="w-full h-auto"
                         referrerPolicy="no-referrer"
