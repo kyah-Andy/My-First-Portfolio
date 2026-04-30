@@ -272,7 +272,7 @@ const AndyPortfolio = () => {
               <p className="text-slate-400 max-w-2xl mx-auto">Showcasing end-to-end data transformation, visualization, and analytical capabilities.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Project 1: Telecom Churn */}
               <motion.div 
                 whileHover={{ y: -10 }}
@@ -336,6 +336,42 @@ const AndyPortfolio = () => {
                   </p>
                   <a 
                     href="https://github.com/kyah-Andy/powerbi-superstore-dashboard" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+                  >
+                    View Repository <Github className="w-4 h-4" />
+                  </a>
+                </div>
+              </motion.div>
+
+              {/* Project 3: End-to-End Azure ETL */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col"
+              >
+                <div className="aspect-video bg-slate-800 relative overflow-hidden">
+                  <img 
+                    src="https://github.com/kyah-Andy/End-to-End-Azure-ETL/blob/main/Architecture/Screenshot%202026-04-30%20110252.png?raw=true" 
+                    alt="End-to-End Azure ETL" 
+                    className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1558494949-ef8b56821803?q=80&w=1000&auto=format&fit=crop";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
+                  <div className="absolute bottom-6 left-6">
+                    <span className="px-3 py-1 bg-indigo-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Azure ADF + Databricks + SQL</span>
+                  </div>
+                </div>
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-2xl font-bold mb-4">End-to-End Azure ETL</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                    A comprehensive data engineering project implementing a full ETL pipeline. Demonstrates automated data movement, complex transformations, and secure storage using Azure Data Factory, Databricks, and Azure SQL Database.
+                  </p>
+                  <a 
+                    href="https://github.com/kyah-Andy/End-to-End-Azure-ETL" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-semibold"
