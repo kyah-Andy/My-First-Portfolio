@@ -29,3 +29,12 @@
 .skill-tag {
   @apply px-3 py-1 bg-surface-card text-text-secondary rounded-full text-sm font-medium border border-white/10 transition-all hover:border-brand-primary hover:text-brand-primary;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

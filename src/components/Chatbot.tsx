@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, X, Send, User, Bot, Loader2 } from 'lucide-react';
+import { MessageSquare, X, Send, User, Bot, Loader2, Sparkles } from 'lucide-react';
+import { GoogleGenAI } from "@google/genai";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -8,87 +9,64 @@ interface Message {
 }
 
 const PORTFOLIO_CONTEXT = `
-You are "Andy's Portfolio Assistant", a helpful and professional AI guide for Andy S. Razon's portfolio website.
-Your goal is to answer questions about Andy's skills, experience, projects, and certifications based on the following information:
+You are an expert, friendly, and professional AI assistant representing Andy Razon. Your name is Andy Razon's AI Assistant.
+Speak in first person as Andy Razon ("I", "me", "my").
 
-Andy S. Razon is a Data Scientist, Data Engineer, and BI Analyst based in Rizal, Philippines.
-Contact: andyrazon3@gmail.com | 09208975952
-LinkedIn: linkedin.com/in/andy-razon-9b9817255
+**Knowledge Base:**
+I am a Data Engineer and Associate at Accenture (Level 12) with a background in Electronics Engineering. 
+I specialize in Azure Data Engineering, Databricks, Power BI, and building scalable data platforms.
+My website (andyrazon.website) showcases my work in these areas.
 
-TECHNICAL SKILLS:
-- Data Engineering: Azure Data Factory, Azure Databricks, Azure SQL, ETL Pipelines, Azure Storage, Azure Key Vault.
-- Data Science & Analytics: Python, SQL, Exploratory Data Analysis (EDA), Statistical Modeling, Numpy/Pandas, Excel.
-- Business Intelligence: Power BI, DAX, Data Modeling, SSIS/SSRS/SSAS, Insight Visualization.
-- Professional: Problem-Solving, Analytical Thinking, Strategic Planning, Project Management.
+**Experience Details:**
+- Accenture (Feb 2023 – Jan 2026): Data Engineering & Governance. I maintain ETL pipelines in Azure Data Factory, manage Databricks clusters, and support cloud platforms. I'm a Point of Contact for Change Management.
+- Fiberhome (July 2020 – April 2022): OSP Design Engineer using CAD. I successfully transitioned from this field into Data/AI.
+- Education: BS in Electronics Engineering from ICCT Colleges (2019). I was one of only 12 graduates from a group of 120, a Top 10 student, and a quiz bee winner.
 
-WORK HISTORY:
-1. App/Cloud Support Engineer (L2) at Accenture, Inc. (Feb 2023 – Jan 2026): Escalation point for Data Platform investigations, collaborated with Microsoft Engineers, managed Azure resources.
-2. OSP Design Engineer at Wuhan Fiberhome International Technologies (July 2020 – April 2022): Optimized design processes using CAD, conducted design assessments.
+**Certifications:**
+- AZ-900 (Azure Fundamentals)
+- PL-300 (Power BI Data Analyst)
+- AI-900 (Azure AI Fundamentals)
+- AI-102 (Azure AI Engineer)
+- FreeCodeCamp Python & Data Analysis certifications.
 
-EDUCATION:
-- B.S. in Electronics Engineering (BSECE) from ICCT Colleges Foundation, Inc. (Graduated Jan 2019).
-- College Journey Highlights: Andy aimed for Latin honors but faced early setbacks. He persevered, ranking in the Top 10 of his batch in the 2nd year. He was a consistent quiz bee participant and won 3rd place in PalaIECEPAN 2018: Battle of InQUIZitive Minds. He was one of only 12 students to graduate from an original group of ~120.
+**Key Projects:**
+- End-to-End Azure ETL: Bronze-Silver-Gold architecture with ADF and Databricks.
+- Superstore Dashboard: $14.92M sales analysis via Power BI.
+- Telecom Churn Prediction: Python/SQL behavioral analysis.
 
-CERTIFICATIONS:
-- Python Developer Certification (FreeCodeCamp, 2026)
-- PL-300: Power BI Data Analyst Associate (Microsoft, 2023)
-- AI-102: Azure AI Engineer Associate (Microsoft, 2024)
-- AZ-900: Microsoft Azure Fundamentals (Microsoft, 2023)
-- AI-900: Azure AI Fundamentals (Microsoft, 2024)
-
-FEATURED PROJECTS:
-1. Telecom Customer Churn Analysis: Python + SQL project predicting customer retention.
-2. Power BI Superstore Dashboard: Sales analytics solution visualizing $14.92M in sales.
-3. End-to-End Azure ETL: Pipeline implementing ADF, Databricks, and SQL Database.
-
-PERSONALITY:
-Helpful, encouraging, and knowledgeable about Andy's technical career. Keep responses concise and focused on Andy's professional profile.
+**Rules of Engagement:**
+- Only state facts found in my resume/website context.
+- Be enthusiastic about data, Azure, and problem-solving.
+- Use bullet points for readability.
+- If you don't know something, offer to share more about my Azure ETL projects or suggest contacting me at andyrazon3@gmail.com.
 `;
-
-const TypingIndicator = () => (
-  <div className="flex gap-2 items-center p-3 bg-surface-bg rounded-2xl rounded-tl-none border border-white/5 w-fit shadow-sm">
-    <div className="flex gap-1">
-      <motion.span
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-        className="w-1.5 h-1.5 bg-brand-primary rounded-full"
-      />
-      <motion.span
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-        className="w-1.5 h-1.5 bg-brand-primary rounded-full"
-      />
-      <motion.span
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-        className="w-1.5 h-1.5 bg-brand-primary rounded-full"
-      />
-    </div>
-    <span className="text-[10px] font-bold text-brand-primary/50 uppercase tracking-tighter">Andy is typing...</span>
-  </div>
-);
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hi! I'm Andy's Portfolio Assistant. How can I help you today?" }
+    { role: 'assistant', content: "Hi there! I'm Andy's AI Assistant. Feel free to ask me anything about my data engineering experience, projects, or technical skills!" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const suggestions = [
+    "Tell me about Andy",
+    "Show certifications",
+    "Show projects",
+    "What tools do you use?",
+    "How can I contact you?"
+  ];
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
 
-  const handleSendMessage = async (e?: React.FormEvent, text?: string) => {
-    if (e) e.preventDefault();
-    const messageText = text || input.trim();
-    
+  const handleSend = async (forcedInput?: string) => {
+    const messageText = forcedInput || input.trim();
     if (!messageText || isLoading) return;
 
     setInput('');
@@ -96,158 +74,169 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      // PROD-READY: Call the backend API instead of exposing the key on the frontend
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [
+          ...messages.map(m => ({
+            role: m.role === 'assistant' ? 'model' as const : 'user' as const,
+            parts: [{ text: m.content }]
+          })),
+          { role: 'user', parts: [{ text: messageText }] }
+        ],
+        config: {
+          systemInstruction: PORTFOLIO_CONTEXT,
+          temperature: 0.7,
         },
-        body: JSON.stringify({
-          message: messageText,
-          context: PORTFOLIO_CONTEXT,
-          history: messages.slice(1) // Send history excluding the initial welcome message
-        }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      const botResponse = data.reply || "I'm sorry, I couldn't process that.";
+      const botResponse = response.text || "I'm sorry, I couldn't process that.";
       setMessages(prev => [...prev, { role: 'assistant', content: botResponse }]);
     } catch (error) {
       console.error("Chatbot Error:", error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now. Please try again later." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now. Please feel free to reach out to me via email at andyrazon3@gmail.com!" }]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const suggestions = [
-    "Tell me about Andy's experience",
-    "What projects has he built?",
-    "What Azure certifications does he have?",
-    "Show his data engineering skills",
-    "What tools does he use?",
-    "Can you explain his Databricks experience?",
-    "Tell me about your college journey"
-  ];
-
   return (
-    <div className="fixed bottom-6 right-6 z-[1000]">
+    <div className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[90vw] sm:w-[400px] h-[600px] bg-surface-card rounded-3xl shadow-2xl border border-white/10 overflow-hidden flex flex-col"
+            className="mb-4 w-[350px] sm:w-[400px] h-[500px] bg-surface-card border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-xl"
+            id="chatbot-window"
           >
             {/* Header */}
-            <div className="p-4 bg-brand-primary text-surface-bg flex justify-between items-center shadow-lg relative overflow-hidden">
-              <div className="absolute inset-0 bg-white/5 opacity-20 pointer-events-none" />
-              <div className="flex items-center gap-3 relative z-10">
-                <div className="w-12 h-12 rounded-full border-2 border-surface-bg/20 overflow-hidden bg-surface-bg shadow-inner flex items-center justify-center">
-                  <Bot className="w-7 h-7 text-brand-primary" />
+            <div className="p-4 bg-brand-primary text-surface-bg flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/20">
+                  <Bot className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="font-bold text-sm tracking-tight">Andy's Assistant</p>
-                  <p className="text-[10px] text-surface-bg/70 flex items-center gap-1 font-bold">
-                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
-                    Always Active
-                  </p>
+                  <h3 className="font-bold text-sm leading-none">Andy's AI Assistant</h3>
+                  <span className="text-[10px] opacity-70">Powered by Gemini AI</span>
                 </div>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-surface-bg/10 rounded-full transition-colors relative z-10"
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                id="close-chatbot"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar">
-              {messages.map((m, idx) => (
-                <div 
-                  key={idx} 
-                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            <div 
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10"
+            >
+              {messages.map((message, i) => (
+                <motion.div
+                  initial={{ opacity: 0, x: message.role === 'user' ? 10 : -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  key={i}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`flex gap-2 max-w-[85%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <div className={`w-8 h-8 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20' : 'bg-surface-bg border border-white/10'}`}>
-                      {m.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                    </div>
-                    <div className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                      m.role === 'user' 
-                        ? 'bg-brand-primary text-surface-bg rounded-tr-none font-medium' 
-                        : 'bg-surface-bg text-text-primary rounded-tl-none border border-white/5'
-                    }`}>
-                      {m.content}
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+                    message.role === 'user' 
+                      ? 'bg-brand-primary text-surface-bg' 
+                      : 'bg-surface-bg border border-white/10 text-text-primary'
+                  }`}>
+                    <div className="whitespace-pre-wrap leading-relaxed">
+                      {message.content}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="flex gap-2 max-w-[85%] flex-row items-center">
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-bg border border-white/10 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-4 h-4" />
-                    </div>
-                    <TypingIndicator />
+                  <div className="bg-surface-bg border border-white/10 p-3 rounded-2xl">
+                    <Loader2 className="w-4 h-4 animate-spin text-brand-primary" />
                   </div>
                 </div>
               )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Suggestions */}
-            <div className="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar border-t border-white/5 bg-surface-bg/50">
-              {suggestions.map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSendMessage(undefined, s)}
-                  disabled={isLoading}
-                  className="whitespace-nowrap px-3 py-1.5 bg-surface-card border border-white/10 rounded-full text-[10px] font-semibold text-text-secondary hover:border-brand-primary hover:text-brand-primary transition-all shadow-sm flex-shrink-0"
-                >
-                  {s}
-                </button>
-              ))}
             </div>
 
             {/* Input */}
-            <form onSubmit={(e) => handleSendMessage(e)} className="p-4 border-t border-white/10">
-              <div className="flex bg-surface-bg rounded-2xl p-1 items-center border border-white/5">
-                <input 
-                  type="text" 
+            <div className="p-4 border-t border-white/10 bg-surface-bg/50">
+              {/* Suggestions */}
+              <div className="flex gap-2 overflow-x-auto pb-3 no-scrollbar scroll-smooth">
+                {suggestions.map((suggestion, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(suggestion)}
+                    disabled={isLoading}
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-text-secondary hover:bg-white/10 hover:border-brand-primary/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask me something about Andy..."
-                  className="flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none text-text-primary placeholder:text-text-secondary/50"
+                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                  placeholder="Ask me something..."
+                  className="w-full bg-surface-card border border-white/10 rounded-xl py-3 pl-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all text-text-primary"
+                  id="chatbot-input"
                 />
-                <button 
-                  type="submit" 
-                  disabled={isLoading || !input.trim()}
-                  className="p-2 bg-brand-primary text-surface-bg rounded-xl disabled:opacity-50 transition-all hover:bg-brand-secondary shadow-lg shadow-brand-primary/20"
+                <button
+                  onClick={handleSend}
+                  disabled={!input.trim() || isLoading}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-brand-primary text-surface-bg rounded-lg disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                  id="send-message"
                 >
                   <Send className="w-4 h-4" />
                 </button>
               </div>
-            </form>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.button 
+      <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-brand-primary text-surface-bg rounded-full flex items-center justify-center shadow-2xl hover:bg-brand-secondary transition-all relative group"
+        className={`w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative ${
+          isOpen ? 'bg-surface-card border border-white/10' : 'bg-brand-primary border-none shadow-brand-primary/20'
+        }`}
+        id="toggle-chatbot"
       >
-        {isOpen ? <X className="w-8 h-8" /> : <MessageSquare className="w-8 h-8" />}
-        <span className="absolute right-full mr-4 bg-surface-card text-text-primary px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl border border-white/10">
-          Chat with Assistant
-        </span>
+        <AnimatePresence>
+          {!isOpen && isHovered && (
+            <motion.div
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className="absolute right-16 top-1/2 -translate-y-1/2 bg-surface-card border border-white/10 px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap pointer-events-none hidden sm:block"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                <span className="text-xs font-medium text-text-primary">Andy's AI Assistant</span>
+              </div>
+              {/* Tooltip Arrow */}
+              <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-surface-card border-r border-t border-white/10 rotate-45" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {isOpen ? (
+          <Sparkles className="w-6 h-6 text-brand-primary" />
+        ) : (
+          <MessageSquare className="w-6 h-6 text-surface-bg" />
+        )}
       </motion.button>
     </div>
   );

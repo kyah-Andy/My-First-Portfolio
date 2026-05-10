@@ -117,29 +117,42 @@ const AndyPortfolio = () => {
 
   const experience = [
     {
-      role: "App/Cloud Support Engineer (L2)",
+      role: "Level 12 - AI & Data / Data Eng, Mgmt & Governance Associate",
       company: "Accenture, Inc.",
-      location: "Taguig, Philippines",
+      location: "Taguig, Metro Manila, Philippines",
       period: "Feb 2023 – Jan 2026",
-      description: "Served as the escalation point for performance-related investigations on the client’s Data Platform. Collaborated with Microsoft Engineers for deep-dive root cause analysis.",
+      description: "Data Engineering and Governance supporting cloud and data platforms with a focus on operational excellence.",
       highlights: [
-        "Managed Azure resources including VMs, ADF, Databases, and Databricks.",
-        "Monitored and resolved ADF pipeline failures.",
-        "Facilitated deployment processes using SSMS and DevOps tools.",
-        "Participated in Avanade FY 22 Data and Analytics Bootcamp (ETL, SQL, PBI)."
+        "Maintained and monitored ETL pipelines using Azure Data Factory, providing support for failures and performance degradation.",
+        "Provisioned and managed Databricks workspaces and clusters, including access and configuration changes.",
+        "Managed Azure resources including Databases, Storage Accounts, and Data Lake.",
+        "Collaborated with Microsoft Engineers to conduct deep-dive investigations and root cause analysis.",
+        "Implemented ITIL-based Incident, Change, and Service Transition processes for smooth deployments.",
+        "Acted as Point of Contact (POC) for Change Management, overseeing deployment approvals.",
+        "Participated in Avanade FY22 Data and Analytics Bootcamp (SSIS, SSRS, SSAS, Power BI)."
       ]
     },
     {
       role: "OSP Design Engineer",
-      company: "Wuhan Fiberhome International Technologies",
+      company: "Wuhan Fiberhome International Technologies Phils.",
       location: "Makati City, Philippines",
-      period: "July 2020 – April 2022",
-      description: "Optimized design processes using advanced CAD software, ensuring compliance with industry and client standards.",
+      period: "Jul 2020 – Apr 2022",
+      description: "Streamlined design processes using CAD software to improve project efficiency and ensure industry compliance.",
       highlights: [
-        "Improved project efficiency through streamlined design processes.",
-        "Collaborated with cross-functional teams for final product integration.",
-        "Conducted design assessments and alternative model evaluations."
+        "Ensured compliance with industry standards by updating design documentation.",
+        "Collaborated with cross-functional teams to integrate engineering designs.",
+        "Conducted design assessments and evaluated alternative models for evolving project demands."
       ]
+    }
+  ];
+
+  const education = [
+    {
+      degree: "Bachelor of Science in Electronics Engineering (BSECE)",
+      school: "ICCT Colleges Foundation, Inc.",
+      location: "Cainta, Rizal, Philippines",
+      date: "Jan 2019",
+      icon: <GraduationCap className="w-6 h-6 text-brand-primary" />
     }
   ];
 
@@ -206,6 +219,31 @@ const AndyPortfolio = () => {
                   >
                     <Linkedin className="w-4 h-4 mr-2" /> LinkedIn Profile
                   </a>
+                </div>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <a 
+                    href="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      alert("Please upload your resume PDF to the public folder and update the link. For now, check my LinkedIn!");
+                    }}
+                    className="flex items-center gap-2 bg-brand-primary text-surface-bg px-6 py-3 rounded-xl font-bold hover:bg-brand-secondary transition-all shadow-lg shadow-brand-primary/20 group"
+                  >
+                    <Download className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                    Download Resume
+                  </a>
+                  <button 
+                    onClick={() => {
+                      const id = 'experience';
+                      const element = document.getElementById(id);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="flex items-center gap-2 bg-surface-card text-text-primary px-6 py-3 rounded-xl font-bold hover:bg-surface-card/80 transition-all border border-white/10"
+                  >
+                    View Experience
+                  </button>
                 </div>
               </motion.div>
               
