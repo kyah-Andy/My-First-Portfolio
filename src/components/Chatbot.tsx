@@ -79,7 +79,7 @@ const Chatbot = () => {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [
-          ...messages.map(m => ({
+          ...messages.slice(1).map(m => ({
             role: m.role === 'assistant' ? 'model' as const : 'user' as const,
             parts: [{ text: m.content }]
           })),
@@ -93,9 +93,17 @@ const Chatbot = () => {
 
       const botResponse = response.text || "I'm sorry, I couldn't process that.";
       setMessages(prev => [...prev, { role: 'assistant', content: botResponse }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chatbot Error:", error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now. Please feel free to reach out to me via email at andyrazon3@gmail.com!" }]);
+      let errorMessage = "Sorry, I'm having trouble connecting right now.";
+      
+      if (error.message?.includes('API_KEY_INVALID') || error.message?.includes('key not valid')) {
+        errorMessage = "The API Key provided is invalid. Please update it in Settings.";
+      } else if (error.message?.includes('404')) {
+        errorMessage = "Model not found. Please check the model name.";
+      }
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: `${errorMessage} (Contact: andyrazon3@gmail.com)` }]);
     } finally {
       setIsLoading(false);
     }
