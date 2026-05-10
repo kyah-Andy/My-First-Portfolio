@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, User, Bot, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -97,24 +96,25 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: (process.env as any).GEMINI_API_KEY });
-      
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [
-          { role: 'user', parts: [{ text: PORTFOLIO_CONTEXT }] },
-          ...messages.map(m => ({ 
-            role: m.role === 'assistant' ? 'model' : 'user', 
-            parts: [{ text: m.content }] 
-          })),
-          { role: 'user', parts: [{ text: messageText }] }
-        ],
-        config: {
-          temperature: 0.7,
-        }
+      // PROD-READY: Call the backend API instead of exposing the key on the frontend
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageText,
+          context: PORTFOLIO_CONTEXT,
+          history: messages.slice(1) // Send history excluding the initial welcome message
+        }),
       });
 
-      const botResponse = response.text || "I'm sorry, I couldn't process that.";
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const botResponse = data.reply || "I'm sorry, I couldn't process that.";
       setMessages(prev => [...prev, { role: 'assistant', content: botResponse }]);
     } catch (error) {
       console.error("Chatbot Error:", error);
