@@ -75,6 +75,13 @@ const AndyPortfolio = () => {
       date: "April 4, 2024", 
       icon: <Cloud className="w-6 h-6 text-indigo-500" />,
       image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Azure%20AI%20Fundamentals.png?raw=true"
+    },
+    { 
+      name: "Data Analysis with Python", 
+      issuer: "FreeCodeCamp", 
+      date: "May 2026", 
+      icon: <Code2 className="w-6 h-6 text-green-600" />,
+      image: "https://github.com/kyah-Andy/Images_Profile/blob/main/Data%20Analysis%20with%20Python.png?raw=true"
     }
   ];
 
